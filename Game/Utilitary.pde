@@ -4,8 +4,6 @@ float between(float value, float lower, float upper) {
   else return value;
 }
 
-int maVarici = 0;
-
 void drawAxis() {
   textSize(20);
   

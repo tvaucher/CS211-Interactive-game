@@ -10,10 +10,10 @@ public class MyBox {
   }
   
   public MyBox() {
-    this(200, 10, 200);
+    this(300, 15, 300);
   }
   
-  public void draw() {
+  public void display() {
     fill(150, 150, 150);
     noStroke();
     box(width, height, length);

@@ -1,13 +1,17 @@
 int screenWidth = 1000;
 int screenHeight = 500;
 float depth = 500;
-MyBox myBox = new MyBox();
+MyBox myBox;
+Mover mover;
 
 void settings() {
   size(screenWidth, screenHeight, P3D);
+  //fullScreen(P3D);
 }
 
 void setup() {
+  myBox = new MyBox();
+  mover = new Mover();
 }
 
 
@@ -22,11 +26,14 @@ void draw() {
   strokeWeight(3);
 
   drawAxis();
-  myBox.draw();
+  myBox.display();
+  mover.update();
+  mover.checkEdges(myBox);
+  mover.display(15,myBox.height);
 }
 
 float speed = 1;
-final float MIN_SPEED = 0.05f, MAX_SPEED = 8;
+final float MIN_SPEED = 0.05f, MAX_SPEED = 2;
 void mouseWheel(MouseEvent event) {
   speed -= event.getCount()/3.0;
   speed = between(speed, MIN_SPEED, MAX_SPEED);
