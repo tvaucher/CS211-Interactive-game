@@ -38,7 +38,7 @@ float rx = 0;
 void mouseDragged() {
   double dz = speed*0.1;
   double dx = speed*0.1;
-    if (mouseX<pmouseX) {
+    if (mouseX>pmouseX) {
       if(rz+dz>PI/3){
         rz=PI/3;
       }
@@ -46,7 +46,7 @@ void mouseDragged() {
         rz += dz;
       }
     }
-    else if (mouseX>pmouseX) {
+    else if (mouseX<pmouseX) {
       if(rz-dz<-PI/3){
         rz= -PI/3;
       }
@@ -54,7 +54,7 @@ void mouseDragged() {
         rz -= dz;
       }
     }
-    if (mouseY>pmouseY) {
+    if (mouseY<pmouseY) {
       if(rx+dx>PI/3){
         rx=PI/3;
       }
@@ -62,7 +62,7 @@ void mouseDragged() {
         rx += dx;
       }
     }
-    else if (mouseY<pmouseY) {
+    else if (mouseY>pmouseY) {
       if(rx-dx<-PI/3){
         rx= -PI/3;
       }
