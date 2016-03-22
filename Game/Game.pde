@@ -55,7 +55,7 @@ void draw() {
 
 void mouseClicked(){
   if(state==GameState.STOPPED){
-    savedCylinder.add(new Cylinder(50,50,40,new PVector(mouseX,0,mouseY)));
+    savedCylinder.add(new Cylinder(20,20,40,new PVector(mouseX,mouseY,0)));
   }
 }
 

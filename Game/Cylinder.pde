@@ -17,7 +17,13 @@ class Cylinder {
     
   }
   void display() {
+    pushMatrix();
+    fill(250,0,0);
+    rotateX(PI/2);
+    translate(0,-15,0);
+    translate(-screenWidth/2 + position.x, -screenHeight/2 + position.y,position.z);
     shape(cylinder);
+    popMatrix();
   }
 
   void initialize() {
@@ -37,8 +43,8 @@ class Cylinder {
     openCylinder.beginShape(QUAD_STRIP);
     //draw the border of the cylinder
     for (int i = 0; i < x.length; i++) {
-      openCylinder.vertex(x[i],0, z[i]);
-      openCylinder.vertex(x[i], cylinderHeight, z[i]);
+      openCylinder.vertex(x[i], z[i],0);
+      openCylinder.vertex(x[i], z[i] , cylinderHeight);
     }
     openCylinder.endShape();
 
@@ -47,16 +53,16 @@ class Cylinder {
     openCylinderBot.beginShape(TRIANGLE_FAN);
     openCylinderBot.vertex(0, 0, 0);
     for (int i = 0; i < x.length; i++) {
-      openCylinderBot.vertex(x[i], 0,z[i]);
+      openCylinderBot.vertex(x[i],z[i], 0);
     }
     openCylinderBot.endShape();
 
     //draw the top (triangle)
     openCylinderTop = createShape();
     openCylinderTop.beginShape(TRIANGLE_FAN);
-    openCylinderTop.vertex(0,  cylinderHeight,0);
+    openCylinderTop.vertex(0, 0, cylinderHeight);
     for (int i = 0; i < x.length; i++) {
-      openCylinderTop.vertex(x[i],cylinderHeight, z[i] );
+      openCylinderTop.vertex(x[i], z[i],cylinderHeight);
     }
     openCylinderTop.endShape();
 
