@@ -3,6 +3,7 @@ class Mover {
   private final float normalForce = 1;
   private final float mu = 0.01;
   private final float frictionMagnitude = normalForce * mu;
+  private final float collisionCoef = 0.7;
 
   private PVector BallLocation;
   private PVector velocity;
@@ -30,26 +31,26 @@ class Mover {
   void checkEdges(MyBox m) {
     if (BallLocation.x > m.width/2.0) {
       BallLocation.x = m.width/2.0;
-      velocity.x=-velocity.x;
+      velocity.x = -velocity.x * collisionCoef;
     } else if (BallLocation.x < -m.width/2.0) {
       BallLocation.x = -m.width/2.0;
-      velocity.x=-velocity.x;
+      velocity.x = -velocity.x * collisionCoef;
     }
     if (BallLocation.z > m.length/2.0) {
       BallLocation.z = m.length/2.0;
-      velocity.z=-velocity.z;
+      velocity.z = -velocity.z * collisionCoef;
     } else if (BallLocation.z < -m.length/2.0) {
       BallLocation.z = -m.length/2.0;
-      velocity.z=-velocity.z;
+      velocity.z = -velocity.z * collisionCoef;
     }
   }
 
   void display(int radius, int height) {
     pushMatrix();
-    translate(0, -(radius+height/2.0), 0);
-    translate(BallLocation.x, BallLocation.y, BallLocation.z); //added code for gravity
-    fill(150);
-    sphere(radius);
+      translate(0, -(radius+height/2.0), 0);
+      translate(BallLocation.x, BallLocation.y, BallLocation.z); //added code for gravity
+      fill(0, 255, 0);
+      sphere(radius);
     popMatrix();
   }
 }
