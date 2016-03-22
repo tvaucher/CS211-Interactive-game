@@ -1,16 +1,16 @@
-public class MyBox {
-  private int width;
-  private int height;
-  private int length;
+public class Box {
+  private float width;
+  private float height;
+  private float length;
   
-  public MyBox(int width, int height, int length) {
+  public Box(int width, int height, int length) {
     this.width = width;
     this.height = height;
     this.length = length;
   }
   
-  public MyBox() {
-    this(300, 15, 300);
+  public Box() {
+    this(350, 15, 350);
   }
   
   public void display() {

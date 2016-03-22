@@ -22,3 +22,12 @@ void drawAxis() {
   line(0,0,-200,0,0,200);
   text("Z",1,1,200);
 }
+
+void drawMousePos() {
+  textSize(20);
+  fill(0,0,0);
+  float correctX = mouseX - screenWidth/2.;
+  float correctY = mouseY - screenHeight/2.;
+  text("mouseX : " + mouseX + " corrected : " + correctX, 1, 25, 0);
+  text("mouseY : " + mouseY + " corrected : " + correctY, 1, 55, 0);
+}

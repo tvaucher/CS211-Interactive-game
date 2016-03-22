@@ -5,14 +5,16 @@ class Mover {
   private final float frictionMagnitude = normalForce * mu;
   private final float collisionCoef = 0.7;
 
-  private PVector BallLocation;
+  private PVector location;
   private PVector velocity;
   private PVector gravityForce;
+  private final float radius;
 
-  Mover() {
-    BallLocation = new PVector(0, 0, 0);
+  Mover(float r) {
+    location = new PVector(0, 0, 0);
     velocity = new PVector(0, 0, 0);
     gravityForce = new PVector(0, 0, 0);
+    radius = r;
   }
 
   void update() {
@@ -25,30 +27,32 @@ class Mover {
     friction.mult(frictionMagnitude);
 
     velocity.add(gravityForce).add(friction);
-    BallLocation.add(velocity);
+    location.add(velocity);
   }
 
-  void checkEdges(MyBox m) {
-    if (BallLocation.x > m.width/2.0) {
-      BallLocation.x = m.width/2.0;
+  void checkEdges(Box m) {
+    if (location.x > m.width/2.0) {
+      location.x = m.width/2.0;
       velocity.x = -velocity.x * collisionCoef;
-    } else if (BallLocation.x < -m.width/2.0) {
-      BallLocation.x = -m.width/2.0;
+    } 
+    else if (location.x < -m.width/2.0) {
+      location.x = -m.width/2.0;
       velocity.x = -velocity.x * collisionCoef;
     }
-    if (BallLocation.z > m.length/2.0) {
-      BallLocation.z = m.length/2.0;
+    if (location.z > m.length/2.0) {
+      location.z = m.length/2.0;
       velocity.z = -velocity.z * collisionCoef;
-    } else if (BallLocation.z < -m.length/2.0) {
-      BallLocation.z = -m.length/2.0;
+    } 
+    else if (location.z < -m.length/2.0) {
+      location.z = -m.length/2.0;
       velocity.z = -velocity.z * collisionCoef;
     }
   }
 
-  void display(int radius, int height) {
+  void display() {
     pushMatrix();
-      translate(0, -(radius+height/2.0), 0);
-      translate(BallLocation.x, BallLocation.y, BallLocation.z); //added code for gravity
+      translate(0, -radius, 0);
+      translate(location.x, location.y, location.z); //added code for gravity
       fill(0, 255, 0);
       sphere(radius);
     popMatrix();

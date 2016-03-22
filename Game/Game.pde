@@ -1,84 +1,77 @@
-//import java.util.List;
+final int screenWidth = 1000;
+final int screenHeight = 600;
+final float depth = 500;
 
-int screenWidth = 1000;
-int screenHeight = 500;
-float depth = 500;
-MyBox myBox;
+Box box;
 Mover mover;
 GameState state;
-ArrayList<Cylinder> savedCylinder = new ArrayList<Cylinder>();
-
+ArrayList<Cylinder> savedCylinder;
 
 void settings() {
   size(screenWidth, screenHeight, P3D);
-  //fullScreen(P3D);
 }
 
 void setup() {
-  myBox = new MyBox();
-  mover = new Mover();
+  box = new Box();
+  mover = new Mover(10);
   state = GameState.RUNNING;
+  savedCylinder = new ArrayList<Cylinder>();
 }
 
 
 void draw() {
-  camera(width/2, height/2, depth, width/2, height/2, 0, 0, 1, 0);
-  lights();
-
   background(255, 255, 255);
-  translate(screenWidth/2, screenHeight/2, 0);
+  camera();
+  lights();
+  drawMousePos();
   
-  
-  if(state== GameState.RUNNING){
+  translate(width/2., height/2., 0);
+  if (state == GameState.RUNNING) {
     rotateX(rx);
     rotateZ(rz);
     mover.update();
-    mover.checkEdges(myBox);
-    
+    mover.checkEdges(box);
   }
- 
-  else{
+  else {
     rotateX(-PI/2);
-    
-    
   }
-  
+
   strokeWeight(3);
   drawAxis();
-  myBox.display();
-  mover.display(15,myBox.height);
-  
-  for(Cylinder c : savedCylinder){
+  box.display();
+  translate(0, -box.height/2, 0);
+  for (Cylinder c : savedCylinder) {
     c.display();
   }
+  mover.display();
 }
 
-void mouseClicked(){
-  if(state==GameState.STOPPED){
-    savedCylinder.add(new Cylinder(20,20,40,new PVector(mouseX,mouseY,0)));
-  }
-}
-
-void keyPressed(){
+void keyPressed() {
   if (key == CODED) {
     if (keyCode == SHIFT) {
       state = GameState.STOPPED;
     }
-  } 
+    /*else if (keyCode == UP) {
+      for (Cylinder c : savedCylinder) {
+        c.speak();
+      }
+    }*/
+  }
 }
-void keyReleased(){
-   if (key == CODED) {
+
+void keyReleased() {
+  if (key == CODED) {
     if (keyCode == SHIFT) {
-      state = GameState.RUNNING; 
+      state = GameState.RUNNING;
     }
   }
 }
 
 float speed = 1;
-final float MIN_SPEED = 0.05f, MAX_SPEED = 2;
+final float MIN_SPEED = 0.05, MAX_SPEED = 2;
 void mouseWheel(MouseEvent event) {
-  if(state==GameState.RUNNING){
-    speed -= event.getCount()/3.0;
+  if (state==GameState.RUNNING) {
+    speed -= event.getCount()/3.;
     speed = between(speed, MIN_SPEED, MAX_SPEED);
   }
 }
@@ -86,7 +79,7 @@ void mouseWheel(MouseEvent event) {
 float rz = 0, rx = 0;
 final float MIN_ANGLE = -PI/3, MAX_ANGLE = PI/3;
 void mouseDragged() {
-  if(state==GameState.RUNNING){
+  if (state == GameState.RUNNING) {
     double dz = speed*0.05;
     double dx = speed*0.05;
     if (mouseX > pmouseX)      rz += dz;
@@ -95,5 +88,14 @@ void mouseDragged() {
     else if (mouseY > pmouseY) rx -= dx;
     rx = between(rx, MIN_ANGLE, MAX_ANGLE);
     rz = between(rz, MIN_ANGLE, MAX_ANGLE);
+  }
+}
+
+void mouseClicked() {
+  if (state == GameState.STOPPED) {
+    PVector pos = new PVector(mouseX - width/2., mouseY - height/2.);
+    if (pos.x >= -box.width/2  && pos.x <= box.width/2 &&
+        pos.y >= -box.length/2 && pos.y <= box.length/2)
+      savedCylinder.add(new Cylinder(15, 20, 40, pos));
   }
 }

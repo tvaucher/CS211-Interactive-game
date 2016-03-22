@@ -1,3 +1,3 @@
-enum GameState{
-  STOPPED,RUNNING;
+enum GameState {
+  STOPPED, RUNNING;
 }
