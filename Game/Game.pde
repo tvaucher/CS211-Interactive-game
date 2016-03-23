@@ -29,7 +29,7 @@ void draw() {
   if (state == GameState.RUNNING) {
     rotateX(rx);
     rotateZ(rz);
-    mover.update();
+    mover.update(savedCylinder);
     mover.checkEdges(box);
   }
   else {
