@@ -17,10 +17,15 @@ class Mover {
     radius = r;
   }
 
-  void update() {
+  //Add parameter to function update
+  void update(ArrayList<Cylinder> cylArray) {
     gravityForce.x = sin(rz) * gravityConstant;
     gravityForce.z = -sin(rx) * gravityConstant;
-
+    
+    //******************************
+    //Here change velocity if collision
+    checkCylindersCollision(cylArray);
+    
     PVector friction = velocity.copy();
     friction.mult(-1);
     friction.normalize();
@@ -28,6 +33,39 @@ class Mover {
 
     velocity.add(gravityForce).add(friction);
     location.add(velocity);
+  }
+  
+  //New method
+  void checkCylindersCollision(ArrayList<Cylinder> cylArray){
+    
+      for(Cylinder c: cylArray){
+        if(inOrBorderCylinder(c)){
+          //normal vector where it touches the cylinder
+          PVector normal =new PVector(location.x-c.position.x,
+                                      location.y-c.position.y,
+                                      location.z-c.position.z);
+
+          //Calculate velocity after collision (formula of the template)
+          float detail1 = 2*(velocity.dot(normal));
+          PVector detail2 = normal.normalize();
+          PVector detail3 = detail2.mult(detail1);
+          velocity = velocity.sub(detail3);
+        }
+      }
+  }
+  
+  
+  //tells if the ball touchs the cylinder (the smaller or equal sign is
+  //because the position is a float and could never be equal)
+  boolean inOrBorderCylinder(Cylinder cyl){ 
+    return distance(location,cyl.position) <= cyl.cylinderBaseSize+radius;
+    
+  }
+  
+  //returns distance between two positions in the plane
+  float distance(PVector p1, PVector p2){
+    return (float)Math.sqrt(Math.pow((p1.x-p2.x),2)+Math.pow((p1.y-p2.y),2));
+    
   }
 
   void checkEdges(Box m) {
