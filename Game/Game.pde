@@ -93,9 +93,9 @@ void mouseDragged() {
 
 void mouseClicked() {
   if (state == GameState.STOPPED) {
-    PVector pos = new PVector(mouseX - width/2., mouseY - height/2.);
+    PVector pos = new PVector(mouseX - width/2., 0, mouseY - height/2.);
     if (pos.x >= -box.width/2  && pos.x <= box.width/2 &&
-        pos.y >= -box.length/2 && pos.y <= box.length/2)
+        pos.z >= -box.length/2 && pos.z <= box.length/2)
       savedCylinder.add(new Cylinder(15, 20, 40, pos));
   }
 }

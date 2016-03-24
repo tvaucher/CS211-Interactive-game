@@ -43,12 +43,11 @@ class Mover {
           //normal vector where it touches the cylinder
           PVector normal =new PVector(location.x-c.position.x,
                                       location.y-c.position.y,
-                                      location.z-c.position.z);
+                                      location.z-c.position.z).normalize();
 
           //Calculate velocity after collision (formula of the template)
           float detail1 = 2*(velocity.dot(normal));
-          PVector detail2 = normal.normalize();
-          PVector detail3 = detail2.mult(detail1);
+          PVector detail3 = normal.mult(detail1);
           velocity = velocity.sub(detail3);
         }
       }
@@ -64,7 +63,7 @@ class Mover {
   
   //returns distance between two positions in the plane
   float distance(PVector p1, PVector p2){
-    return (float)Math.sqrt(Math.pow((p1.x-p2.x),2)+Math.pow((p1.y-p2.y),2));
+    return (float)Math.sqrt(Math.pow((p1.x-p2.x),2)+Math.pow((p1.z-p2.z),2));
     
   }
 

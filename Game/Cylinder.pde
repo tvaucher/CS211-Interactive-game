@@ -18,7 +18,7 @@ class Cylinder {
 
   void display() {
     pushMatrix();
-      translate(position.x, 0, position.y);
+      translate(position.x, 0, position.z);
       shape(cylinder);
     popMatrix();
   }
@@ -69,6 +69,6 @@ class Cylinder {
   }
   
   void speak() {
-    println("x : " + position.x + ", z : " + position.y);
+    println("x : " + position.x + ", z : " + position.z);
   }
 }
