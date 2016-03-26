@@ -14,7 +14,7 @@ void settings() {
 void setup() {
   box = new Box();
   mover = new Mover(10);
-  state = GameState.RUNNING;
+  state = GameState.STANDARD;
   savedCylinder = new ArrayList<Cylinder>();
 }
 
@@ -22,20 +22,22 @@ void setup() {
 void draw() {
   background(255, 255, 255);
   camera();
-  lights();
-  drawMousePos();
-  
   translate(width/2., height/2., 0);
-  if (state == GameState.RUNNING) {
+  //drawMousePos();
+  
+  if (state == GameState.STANDARD) {
+    perspective();
     rotateX(rx);
     rotateZ(rz);
+    lights();
     mover.update(savedCylinder);
     mover.checkEdges(box);
   }
   else {
+    ortho();
     rotateX(-PI/2);
   }
-
+  
   strokeWeight(3);
   drawAxis();
   box.display();
@@ -49,7 +51,7 @@ void draw() {
 void keyPressed() {
   if (key == CODED) {
     if (keyCode == SHIFT) {
-      state = GameState.STOPPED;
+      state = GameState.SHIFTMODE;
     }
     /*else if (keyCode == UP) {
       for (Cylinder c : savedCylinder) {
@@ -62,16 +64,16 @@ void keyPressed() {
 void keyReleased() {
   if (key == CODED) {
     if (keyCode == SHIFT) {
-      state = GameState.RUNNING;
+      state = GameState.STANDARD;
     }
   }
 }
 
 float speed = 1;
-final float MIN_SPEED = 0.05, MAX_SPEED = 2;
+final float MIN_SPEED = 0.5, MAX_SPEED = 2;
 void mouseWheel(MouseEvent event) {
-  if (state==GameState.RUNNING) {
-    speed -= event.getCount()/3.;
+  if (state==GameState.STANDARD) {
+    speed -= event.getCount()/5.;
     speed = between(speed, MIN_SPEED, MAX_SPEED);
   }
 }
@@ -79,9 +81,9 @@ void mouseWheel(MouseEvent event) {
 float rz = 0, rx = 0;
 final float MIN_ANGLE = -PI/3, MAX_ANGLE = PI/3;
 void mouseDragged() {
-  if (state == GameState.RUNNING) {
-    double dz = speed*0.05;
-    double dx = speed*0.05;
+  if (state == GameState.STANDARD) {
+    double dz = speed / frameRate;
+    double dx = speed / frameRate;
     if (mouseX > pmouseX)      rz += dz;
     else if (mouseX < pmouseX) rz -= dz;
     if (mouseY < pmouseY)      rx += dx;
@@ -92,7 +94,7 @@ void mouseDragged() {
 }
 
 void mouseClicked() {
-  if (state == GameState.STOPPED) {
+  if (state == GameState.SHIFTMODE) {
     PVector pos = new PVector(mouseX - width/2., 0, mouseY - height/2.);
     if (pos.x >= -box.width/2  && pos.x <= box.width/2 &&
         pos.z >= -box.length/2 && pos.z <= box.length/2)

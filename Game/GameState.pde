@@ -1,3 +1,3 @@
 enum GameState {
-  STOPPED, RUNNING;
+  STANDARD, SHIFTMODE;
 }
