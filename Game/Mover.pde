@@ -4,17 +4,15 @@ class Mover {
   private final float mu = 0.01;
   private final float frictionMagnitude = normalForce * mu;
   private final float collisionCoef = 0.7;
-
-  private PVector location;
+  
   private PVector velocity;
   private PVector gravityForce;
-  private final float radius;
-
-  Mover(float r) {
-    location = new PVector(0, 0, 0);
+  private Ball ball;
+  
+  Mover(Ball b) {
     velocity = new PVector(0, 0, 0);
     gravityForce = new PVector(0, 0, 0);
-    radius = r;
+    ball = b;
   }
 
   //Add parameter to function update
@@ -32,7 +30,7 @@ class Mover {
     friction.mult(frictionMagnitude);
 
     velocity.add(gravityForce).add(friction);
-    location.add(velocity);
+    ball.position.add(velocity);
   }
 
   //New method
@@ -40,11 +38,11 @@ class Mover {
     for (Cylinder c : cylArray) {
       if (inOrBorderCylinder(c)) {
         //normal vector where it touches the cylinder
-        PVector normal = PVector.sub(location, c.position).normalize();
+        PVector normal = PVector.sub(ball.position, c.position).normalize();
 
         //Calculate velocity after collision (formula of the template)
         velocity = velocity.sub(PVector.mult(normal, 2*(velocity.dot(normal))));
-        location = PVector.add(c.position, normal.mult(radius + c.cylinderBaseSize));
+        ball.position = PVector.add(c.position, normal.mult(ball.radius + c.radius));
       }
     }
   }
@@ -53,32 +51,23 @@ class Mover {
   //tells if the ball touchs the cylinder (the smaller or equal sign is
   //because the position is a float and could never be equal)
   boolean inOrBorderCylinder(Cylinder cyl) { 
-    return location.dist(cyl.position) <= cyl.cylinderBaseSize + radius;
+    return ball.position.dist(cyl.position) <= cyl.radius + ball.radius;
   }
 
   void checkEdges(Box m) {
-    if (location.x > m.width/2.0) {
-      location.x = m.width/2.0;
+    if (ball.position.x > m.width/2.0) {
+      ball.position.x = m.width/2.0;
       velocity.x = -velocity.x * collisionCoef;
-    } else if (location.x < -m.width/2.0) {
-      location.x = -m.width/2.0;
+    } else if (ball.position.x < -m.width/2.0) {
+      ball.position.x = -m.width/2.0;
       velocity.x = -velocity.x * collisionCoef;
     }
-    if (location.z > m.length/2.0) {
-      location.z = m.length/2.0;
+    if (ball.position.z > m.length/2.0) {
+      ball.position.z = m.length/2.0;
       velocity.z = -velocity.z * collisionCoef;
-    } else if (location.z < -m.length/2.0) {
-      location.z = -m.length/2.0;
+    } else if (ball.position.z < -m.length/2.0) {
+      ball.position.z = -m.length/2.0;
       velocity.z = -velocity.z * collisionCoef;
     }
-  }
-
-  void display() {
-    pushMatrix();
-      translate(0, -radius, 0); //move to center of the sphere plane
-      translate(location.x, location.y, location.z); //added code for gravity
-      fill(0, 255, 0);
-      sphere(radius);
-    popMatrix();
   }
 }
