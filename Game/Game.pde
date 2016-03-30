@@ -74,7 +74,7 @@ final float MIN_SPEED = 0.5, MAX_SPEED = 2;
 void mouseWheel(MouseEvent event) {
   if (state==GameState.STANDARD) {
     speed -= event.getCount()/5.;
-    speed = between(speed, MIN_SPEED, MAX_SPEED);
+    speed = constrain(speed, MIN_SPEED, MAX_SPEED);
   }
 }
 
@@ -82,14 +82,14 @@ float rz = 0, rx = 0;
 final float MIN_ANGLE = -PI/3, MAX_ANGLE = PI/3;
 void mouseDragged() {
   if (state == GameState.STANDARD) {
-    double dz = speed / frameRate;
-    double dx = speed / frameRate;
+    float dz = speed / frameRate;
+    float dx = speed / frameRate;
     if (mouseX > pmouseX)      rz += dz;
     else if (mouseX < pmouseX) rz -= dz;
     if (mouseY < pmouseY)      rx += dx;
     else if (mouseY > pmouseY) rx -= dx;
-    rx = between(rx, MIN_ANGLE, MAX_ANGLE);
-    rz = between(rz, MIN_ANGLE, MAX_ANGLE);
+    rx = constrain(rx, MIN_ANGLE, MAX_ANGLE);
+    rz = constrain(rz, MIN_ANGLE, MAX_ANGLE);
   }
 }
 

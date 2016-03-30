@@ -1,9 +1,3 @@
-float between(float value, float lower, float upper) {
-  if (value < lower) return lower;
-  else if (value > upper) return upper;
-  else return value;
-}
-
 void drawAxis() {
   textSize(20);
   
