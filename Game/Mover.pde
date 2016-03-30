@@ -21,11 +21,11 @@ class Mover {
   void update(ArrayList<Cylinder> cylArray) {
     gravityForce.x = sin(rz) * gravityConstant;
     gravityForce.z = -sin(rx) * gravityConstant;
-    
+
     //******************************
     //Here change velocity if collision
     checkCylindersCollision(cylArray);
-    
+
     PVector friction = velocity.copy();
     friction.mult(-1);
     friction.normalize();
@@ -34,19 +34,17 @@ class Mover {
     velocity.add(gravityForce).add(friction);
     location.add(velocity);
   }
-  
+
   //New method
   void checkCylindersCollision(ArrayList<Cylinder> cylArray) {
-
     for (Cylinder c : cylArray) {
       if (inOrBorderCylinder(c)) {
         //normal vector where it touches the cylinder
-        PVector normal = new PVector(location.x - c.position.x, 
-          location.y - c.position.y,
-          location.z - c.position.z).normalize();
+        PVector normal = PVector.sub(location, c.position).normalize();
 
         //Calculate velocity after collision (formula of the template)
-        velocity = velocity.sub(normal.mult(2*(velocity.dot(normal))));
+        velocity = velocity.sub(PVector.mult(normal, 2*(velocity.dot(normal))));
+        location = PVector.add(c.position, normal.mult(radius + c.cylinderBaseSize));
       }
     }
   }
