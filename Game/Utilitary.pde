@@ -1,4 +1,5 @@
 void drawAxis() {
+  strokeWeight(3);
   textSize(20);
   
   stroke(255,0,0);
