@@ -1,18 +1,17 @@
-class Cylinder {
-  final float cylinderBaseSize;
-  final float cylinderHeight;
-  final int cylinderResolution;
+class Cylinder extends Shape {
+  final float radius;
+  final float cHeight;
+  final int resolution;
   PShape openCylinderBot;
   PShape openCylinderTop;
   PShape openCylinder;
   PShape cylinder;
-  final PVector position;
 
-  Cylinder(float baseSize, float cylHeight, int resolution, PVector v) {
-    cylinderBaseSize = baseSize;
-    cylinderHeight = cylHeight;
-    cylinderResolution = resolution;
-    position = v.copy();
+  Cylinder(float r, float h, int res, PVector p) {
+    super(p);
+    radius = r;
+    cHeight = h;
+    resolution = res;
     initialize();
   }
 
@@ -25,13 +24,13 @@ class Cylinder {
 
   void initialize() {
     float angle;
-    float[] x = new float[cylinderResolution + 1];
-    float[] z = new float[cylinderResolution + 1];
+    float[] x = new float[resolution + 1];
+    float[] z = new float[resolution + 1];
     //get the x and z position on a circle for all the sides
     for (int i = 0; i < x.length; i++) {
-      angle = (TWO_PI / cylinderResolution) * i;
-      x[i] = sin(angle) * cylinderBaseSize;
-      z[i] = cos(angle) * cylinderBaseSize;
+      angle = (TWO_PI / resolution) * i;
+      x[i] = sin(angle) * radius;
+      z[i] = cos(angle) * radius;
     }
 
     openCylinder = createShape();
@@ -39,7 +38,7 @@ class Cylinder {
     //draw the border of the cylinder
     for (int i = 0; i < x.length; i++) {
       openCylinder.vertex(x[i], 0, z[i]);
-      openCylinder.vertex(x[i], -cylinderHeight, z[i]);
+      openCylinder.vertex(x[i], -cHeight, z[i]);
     }
     openCylinder.endShape();
 
@@ -55,9 +54,9 @@ class Cylinder {
     //draw the top (triangle)
     openCylinderTop = createShape();
     openCylinderTop.beginShape(TRIANGLE_FAN);
-    openCylinderTop.vertex(0, -cylinderHeight, 0);
+    openCylinderTop.vertex(0, -cHeight, 0);
     for (int i = 0; i < x.length; i++) {
-      openCylinderTop.vertex(x[i], -cylinderHeight, z[i]);
+      openCylinderTop.vertex(x[i], -cHeight, z[i]);
     }
     openCylinderTop.endShape();
 
