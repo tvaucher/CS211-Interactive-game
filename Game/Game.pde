@@ -3,6 +3,7 @@ final int screenHeight = 600;
 final float depth = 500;
 
 Box box;
+Ball ball;
 Mover mover;
 GameState state;
 ArrayList<Cylinder> savedCylinder;
@@ -13,7 +14,8 @@ void settings() {
 
 void setup() {
   box = new Box();
-  mover = new Mover(10);
+  ball = new Ball(new PVector(0, 0, 0), 10);
+  mover = new Mover(ball);
   state = GameState.STANDARD;
   savedCylinder = new ArrayList<Cylinder>();
 }
@@ -38,14 +40,11 @@ void draw() {
     rotateX(-PI/2);
   }
   
-  strokeWeight(3);
   drawAxis();
   box.display();
   translate(0, -box.height/2, 0);
-  for (Cylinder c : savedCylinder) {
-    c.display();
-  }
-  mover.display();
+  for (Cylinder c : savedCylinder) c.display();
+  ball.display();
 }
 
 void keyPressed() {
