@@ -15,8 +15,8 @@ public class Box extends Shape {
   }
   
   public void display() {
-    fill(150);
-    noStroke();
+    if (rx < 0) fill(200,200,200);
+    else fill(200, 200, 200, 150);
     box(width, height, length);
   }
 }
