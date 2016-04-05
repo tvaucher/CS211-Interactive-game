@@ -1,7 +1,7 @@
 class Mover {
   private final float gravityConstant = 0.06;
   private final float normalForce = 1;
-  private final float mu = 0.01;
+  private final float mu = 0.015;
   private final float frictionMagnitude = normalForce * mu;
   private final float collisionCoef = 0.7;
   
@@ -33,28 +33,9 @@ class Mover {
     ball.position.add(velocity);
   }
 
-  //New method
-  void checkCylindersCollision(ArrayList<Cylinder> cylArray) {
-    for (Cylinder c : cylArray) {
-      if (inOrBorderCylinder(c)) {
-        //normal vector where it touches the cylinder
-        PVector normal = PVector.sub(ball.position, c.position).normalize();
+  public void checkEdges(ArrayList<Cylinder> cylArray, Box m) {
+    checkCylindersCollision(cylArray);
 
-        //Calculate velocity after collision (formula of the template)
-        velocity = velocity.sub(PVector.mult(normal, 2*(velocity.dot(normal))));
-        ball.position = PVector.add(c.position, normal.mult(ball.radius + c.radius));
-      }
-    }
-  }
-
-
-  //tells if the ball touchs the cylinder (the smaller or equal sign is
-  //because the position is a float and could never be equal)
-  boolean inOrBorderCylinder(Cylinder cyl) { 
-    return ball.position.dist(cyl.position) <= cyl.radius + ball.radius;
-  }
-
-  void checkEdges(Box m) {
     if (ball.position.x > m.width/2.0) {
       ball.position.x = m.width/2.0;
       velocity.x = -velocity.x * collisionCoef;
@@ -69,5 +50,24 @@ class Mover {
       ball.position.z = -m.length/2.0;
       velocity.z = -velocity.z * collisionCoef;
     }
+  }
+
+  private void checkCylindersCollision(ArrayList<Cylinder> cylArray) {
+    for (Cylinder c : cylArray) {
+      if (inOrBorderCylinder(c)) {
+        //normal vector where it touches the cylinder
+        PVector normal = PVector.sub(ball.position, c.position).normalize();
+
+        //Calculate velocity after collision (formula of the template)
+        velocity = velocity.sub(PVector.mult(normal, 2*(velocity.dot(normal))));
+        ball.position = PVector.add(c.position, normal.mult(ball.radius + c.radius));
+      }
+    }
+  }
+
+  private boolean inOrBorderCylinder(Cylinder cyl) {
+    //tells if the ball touchs the cylinder (the smaller or equal sign is
+    //because the position is a float and could never be equal)
+    return ball.position.dist(cyl.position) <= cyl.radius + ball.radius;
   }
 }
