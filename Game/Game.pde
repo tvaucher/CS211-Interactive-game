@@ -25,13 +25,15 @@ void draw() {
   background(255, 255, 255);
   camera();
   translate(width/2., height/2., 0);
-  //drawMousePos();
   
   if (state == GameState.STANDARD) {
+    ambientLight(160, 160, 160, 0, -1, 0);
+    directionalLight(85, 85, 100, -1, 1, -1);
+    lightFalloff(1.0, 0.001, 0.0);
     perspective();
     rotateX(rx);
-    rotateZ(rz);
-    lights();
+    rotateZ(rz);    
+    
     mover.update(savedCylinder);
     mover.checkEdges(box);
   }
@@ -39,12 +41,15 @@ void draw() {
     ortho();
     rotateX(-PI/2);
   }
-  
   drawAxis();
+  noStroke();  
+  pushMatrix();
+    translate(0, -box.height/2, 0);
+    for (Cylinder c : savedCylinder) c.display();
+    ball.display();
+  popMatrix();
   box.display();
-  translate(0, -box.height/2, 0);
-  for (Cylinder c : savedCylinder) c.display();
-  ball.display();
+  
 }
 
 void keyPressed() {
@@ -52,11 +57,6 @@ void keyPressed() {
     if (keyCode == SHIFT) {
       state = GameState.SHIFTMODE;
     }
-    /*else if (keyCode == UP) {
-      for (Cylinder c : savedCylinder) {
-        c.speak();
-      }
-    }*/
   }
 }
 

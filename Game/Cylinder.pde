@@ -66,8 +66,4 @@ class Cylinder extends Shape {
     cylinder.addChild(openCylinderBot);
     cylinder.setFill(color(255,0,0));
   }
-  
-  void speak() {
-    println("x : " + position.x + ", z : " + position.z);
-  }
 }
