@@ -1,28 +1,51 @@
-class Cylinder extends Shape {
-  final float radius;
-  final float cHeight;
-  final int resolution;
-  PShape openCylinderBot;
-  PShape openCylinderTop;
-  PShape openCylinder;
-  PShape cylinder;
-
-  Cylinder(float r, float h, int res, PVector p) {
+/**
+ * @brief Cylinder class that extends abstract class Shape.
+ * Responsible of creating a complete cylinder and store its position
+ * 
+ * @author Simon Haefeli (246663)
+ * @author Timoté Vaucher (246532)
+ */
+public class Cylinder extends Shape {
+  public final float radius;
+  private final float cHeight;
+  private final int resolution;
+  private PShape openCylinderBot;
+  private PShape openCylinderTop;
+  private PShape openCylinder;
+  private PShape cylinder;
+  
+  /**
+   * @brief Constructs a cylinder with the given parameters
+   * @param r   The cylinder radius
+   * @param h   The cylinder height
+   * @param res The cylinder resulution (approx of circle)
+   * @param p   The cylinder position
+   */
+  public Cylinder(float r, float h, int res, PVector p) {
     super(p);
     radius = r;
     cHeight = h;
     resolution = res;
     initialize();
   }
-
-  void display() {
+  
+  /**
+   * @brief Implementation of Shape.display
+   * Must translate first to position before drawing
+   * Hypothesis on origin : on the plate on its center 
+   */
+  public void display() {
     pushMatrix();
       translate(position.x, 0, position.z);
       shape(cylinder);
     popMatrix();
   }
-
-  void initialize() {
+  
+  /**
+   * @brief Initializes the top/bottom circles and the open cylinder. 
+   *        Creates a group to draw the parts together easily
+   */
+  private void initialize() {
     float angle;
     float[] x = new float[resolution + 1];
     float[] z = new float[resolution + 1];

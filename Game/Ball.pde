@@ -1,11 +1,27 @@
+/**
+ * @brief Ball class that extends abstract class Shape.
+ * 
+ * @author Simon Haefeli (246663)
+ * @author Timoté Vaucher (246532)
+ */
 public class Ball extends Shape {
-  final float radius;
+  public final float radius;
   
-  public Ball(PVector p, float r) {
+  /**
+   * @brief Creates the ball given its position and radius
+   * @param r The radius of the ball
+   * @param p The posiition of the ball
+   */
+  public Ball(float r, PVector p) {
     super(p);
     radius = r;
   }
   
+  /**
+   * @brief Implementation of Shape.display
+   * Must translate first to position and add radius before drawing
+   * Hypothesis on origin : on the plate on its center 
+   */
   public void display() {
     pushMatrix();
       translate(0, -radius, 0); //move to center of the sphere plane

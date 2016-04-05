@@ -1,4 +1,7 @@
-void drawAxis() {
+/**
+ *  @brief utulitary method to draw the three axis with legend and color 
+ */
+public void drawAxis() {
   strokeWeight(3);
   textSize(20);
   
