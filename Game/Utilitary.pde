@@ -20,3 +20,10 @@ public void drawAxis() {
   line(0,0,-200,0,0,200);
   text("Z",1,1,200);
 }
+
+public void displayBackgroundDataVis() {
+  backgroundDataVis.beginDraw();
+  backgroundDataVis.background(255,240,190);
+  backgroundDataVis.endDraw();
+  image(backgroundDataVis, 0, screenHeight - backgroundDataVisHeight);
+}

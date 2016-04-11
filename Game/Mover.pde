@@ -46,21 +46,25 @@ public class Mover {
    * @param cylArray The list of cylinders on the plate
    * @param m The plate object
    */
-  public void checkEdges(ArrayList<Cylinder> cylArray, Box m) {
-    checkCylindersCollision(cylArray);
-
+  public void checkEdges(ArrayList<Cylinder> cylArray, Box m, ScoreManager s) {
+    checkCylindersCollision(cylArray, s);
+    
     if (ball.position.x > m.width/2.0) {
       ball.position.x = m.width/2.0;
+      s.hitEvent(velocity.copy(), Ratio.WALL);
       velocity.x = -velocity.x * collisionCoef;
     } else if (ball.position.x < -m.width/2.0) {
       ball.position.x = -m.width/2.0;
+      s.hitEvent(velocity.copy(), Ratio.WALL);
       velocity.x = -velocity.x * collisionCoef;
     }
     if (ball.position.z > m.length/2.0) {
       ball.position.z = m.length/2.0;
+      s.hitEvent(velocity.copy(), Ratio.WALL);
       velocity.z = -velocity.z * collisionCoef;
     } else if (ball.position.z < -m.length/2.0) {
       ball.position.z = -m.length/2.0;
+      s.hitEvent(velocity.copy(), Ratio.WALL);
       velocity.z = -velocity.z * collisionCoef;
     }
   }
@@ -69,12 +73,13 @@ public class Mover {
    * @brief Helper method to check the collision with the cylinders
    * @param cylArray The list of cylinders on the plate
    */
-  private void checkCylindersCollision(ArrayList<Cylinder> cylArray) {
+  private void checkCylindersCollision(ArrayList<Cylinder> cylArray, ScoreManager s) {
     for (Cylinder c : cylArray) {
       if (inOrBorderCylinder(c)) {
         //normal vector where it touches the cylinder
         PVector normal = PVector.sub(ball.position, c.position).normalize();
-
+        
+        s.hitEvent(velocity.copy(), Ratio.CYLINDER);
         //Calculate velocity after collision (formula of the template)
         velocity = velocity.sub(PVector.mult(normal, 2*(velocity.dot(normal))));
         ball.position = PVector.add(c.position, normal.mult(ball.radius + c.radius));
