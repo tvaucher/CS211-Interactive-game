@@ -25,12 +25,13 @@ void setup() {
 }
 void draw() {
 
-  PImage filtered3 = colorFilter(110,137, img);
-  PImage filtered = brightnessFilter(44,163,filtered3);
-  PImage filtered2 = saturationFilter(44,163,filtered);
+  PImage filtered3 = colorFilter(70,140, img);
+  PImage filtered = brightnessFilter(30,147,filtered3);
+  PImage filtered2 = saturationFilter(87,255,filtered);
+  
   PImage gaussian1 = convolute(gaussianKernel,filtered2);
-
-  PImage sobel1 = sobel(gaussian1);
+  PImage binaried = binaryFilter(70,14,gaussian1);
+  PImage sobel1 = sobel(binaried);
   image(sobel1,0,0);
 }
 
@@ -113,6 +114,20 @@ PImage convolute(float[][] kernel, PImage image) {
      // result.set(i,j,color(valueNew/weight)) ;
      result.set(i,j,color(r/weight, g/weight, b/weight));
     } 
+  }
+  updatePixels();
+  return result;
+}
+PImage binaryFilter(int min, int max, PImage image){
+  loadPixels();
+  PImage result = createImage(image.width,image.height,RGB);
+  for(int i = 0; i < image.width * image.height; i++) {
+    if(hue(image.pixels[i])>min && hue(image.pixels[i])<max){
+      result.pixels[i] = color(255);
+    }
+    else{
+      result.pixels[i] = color(0);
+    }
   }
   updatePixels();
   return result;
