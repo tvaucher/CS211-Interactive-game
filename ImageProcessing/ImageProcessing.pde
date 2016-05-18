@@ -28,6 +28,7 @@ int MIN_AREA = 70000, MAX_AREA = 350000;
 // Main processing methods
 void settings() {
   size(1760, 480); // Resize img and sobel : 640x480, hough transform : 480x480
+                   // In order to fit on a 1920x1080 screen
   trigo = new TrigonometricAccelerator(phiDim, discretizationStepsR, discretizationStepsPhi);
 }
 
