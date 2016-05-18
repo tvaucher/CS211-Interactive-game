@@ -3,12 +3,12 @@ PImage sobel(PImage image) {
     { 0, 1, 0 }, 
     { 0, 0, 0 }, 
     { 0, -1, 0 } };
-    
+
   float[][] vKernel = { 
     { 0, 0, 0 }, 
     { 1, 0, -1 }, 
     { 0, 0, 0 } };
-    
+
   loadPixels();
   PImage result = createImage(image.width, image.height, ALPHA);
   // clear the image
@@ -21,26 +21,33 @@ PImage sobel(PImage image) {
   // *************************************
   for (int i=1; i<image.width-1; i++) {
     for (int j=1; j<image.height-1; j++) {
-      int sum_h = 0;
-      int sum_v = 0;
+      float sum_h = 0;
+      float sum_v = 0;
 
       for (int e = 0; e < 3; e++) {
         for (int f = 0; f < 3; f++) {
-          color c = image.get(i-1+e, j-1+f);
+          float c = brightness(image.get(i-1+e, j-1+f));
           sum_h += hKernel[e][f]*c;
           sum_v += vKernel[e][f]*c;
         }
       }
-      if (sum_h>max) max=sum_h;
-      if (sum_v>max) max=sum_v;
-
-      float sum = sqrt(pow(sum_h, 2)+pow(sum_v, 2));
-
+      
+      float sum = sum_h*sum_h + sum_v*sum_v; //store squared version to save compute time
+      if (sum > max) max = sum;
+      
       buffer[j*image.width+i] = sum;
-      if (buffer[j * image.width + i] > (int)(max * 0.3f)) { // 30% of the max
-        result.pixels[j * image.width + i] = color(255);
-      } else {
-        result.pixels[j * image.width + i] = color(0);
+    }
+  }
+  
+  float threshold = max * 0.09f; // 0.3^2 30% of the max
+  println(threshold + " " + max + " " + 255*255*2);
+  for (int y = 1; y < image.height - 1; y++) { // Skip top and bottom edges
+    for (int x = 1; x < image.width - 1; x++) { // Skip left and right
+      if (buffer[y * image.width + x] >= threshold) { 
+        result.pixels[y * image.width + x] = color(255);
+      }
+      else {
+        result.pixels[y * image.width + x] = color(0);
       }
     }
   }
