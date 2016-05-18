@@ -62,7 +62,7 @@ class QuadGraph {
       for (int i = 1; i < cy.length; i++) {
         s += "," + cy[i];
       }
-      System.out.println(s);
+      //System.out.println(s);
     }
     return cycles;
   }
@@ -326,21 +326,21 @@ class QuadGraph {
 
       boolean convex = isConvex(c1, c2, c3, c4);
       float area = area(c1, c2, c3, c4);
-      boolean valid = validArea(area, 25000, 500000);
+      boolean valid = validArea(area, MIN_AREA, MAX_AREA);
       boolean flat = nonFlatQuad(c1, c2, c3, c4);
       if (convex && valid && flat && area > maxArea) {
         maxArea = area;
         bestQuad = quad;
       }
     }
-
-    assert(bestQuad != null);
+    
     return bestQuad;
   }
 
 
   void displayBestQuad(List<PVector> lines, int w) {
     int[] quad = getBestQuad(lines);
+    if (quad == null) return; //Don't want to draw best quad if there isn't any => try to fit thresholding
     ArrayList<PVector> l = new ArrayList<PVector>(4);
     for (int i = 0; i < 4; ++i) {
       l.add(lines.get(quad[i]));

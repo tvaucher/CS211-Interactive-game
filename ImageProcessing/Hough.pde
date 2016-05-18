@@ -18,18 +18,16 @@ public class Hough {
         // Are we on an edge?
         if (brightness(edgeImg.pixels[y * edgeImg.width + x]) != 0) {
           for (int phiTab = 0; phiTab < phiDim; phiTab++) {
-            float phi = phiTab * discretizationStepsPhi;
-            float r = (float)(Math.cos(phi)*x + y*Math.sin(phi));
-            int rIndex = Math.round(r/discretizationStepsR);
-
-            int index = (phiTab + 1) * (rDim+2) + (rIndex + 1) + (rDim-1)/2;
+            int r = Math.round(trigo.getCos(phiTab) * x + y * trigo.getSin(phiTab));
+            
+            int index = (phiTab + 1) * (rDim+2) + (r + 1) + (rDim-1)/2;
             accumulator[index] ++;
           }
         }
       }
     }
 
-    lines = getLines(edgeImg, nLines);
+    lines = getLines(nLines);
   }
 
   PImage getHoughImage() {
@@ -44,24 +42,19 @@ public class Hough {
     return houghImg;
   }
 
-  private ArrayList<PVector> getLines(PImage edgeImg, int nLines) {
+  private ArrayList<PVector> getLines(int nLines) {
     ArrayList<Integer> bestCandidates = new ArrayList<Integer>();
-    // size of the region we search for a local maximum
-    int neighbourhood = 10;
-    // only search around lines with more that this amount of votes
-    // (to be adapted to your image)
-    int minVotes = 150; //usually 200
     for (int accR = 0; accR < rDim; accR++) {
       for (int accPhi = 0; accPhi < phiDim; accPhi++) {
         // compute current index in the accumulator
         int idx = (accPhi + 1) * (rDim + 2) + accR + 1;
-        if (accumulator[idx] > minVotes) {
+        if (accumulator[idx] > MIN_VOTE) {
           boolean bestCandidate=true;
           // iterate over the neighbourhood
-          for (int dPhi=-neighbourhood/2; dPhi < neighbourhood/2+1; dPhi++) {
+          for (int dPhi=-NEIGHBOURHOOD/2; dPhi < NEIGHBOURHOOD/2+1; dPhi++) {
             // check we are not outside the image
             if ( accPhi+dPhi < 0 || accPhi+dPhi >= phiDim) continue;
-            for (int dR=-neighbourhood/2; dR < neighbourhood/2 +1; dR++) {
+            for (int dR=-NEIGHBOURHOOD/2; dR < NEIGHBOURHOOD/2 +1; dR++) {
               // check we are not outside the image
               if (accR+dR < 0 || accR+dR >= rDim) continue;
               int neighbourIdx = (accPhi + dPhi + 1) * (rDim + 2) + accR + dR + 1;
@@ -92,6 +85,7 @@ public class Hough {
       float phi = accPhi * discretizationStepsPhi;
 
       PVector vect = new PVector(r, phi);
+      //PVector vect = new PVector(r, accPhi);
       pairs.add(vect);
     }
 

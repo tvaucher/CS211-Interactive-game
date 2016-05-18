@@ -13,10 +13,10 @@ class TrigonometricAccelerator {
       tabCos[accPhi] = (float) (Math.cos(ang) * inverseR);
     }
   }
-  public float getCos(float phi) {
-    return tabCos[(int)(phi/discretizationStepsPhi)];
+  public float getCos(int phiIndex) {
+    return tabCos[phiIndex];
   }
-  public float getSin(float phi) {
-    return tabSin[(int)(phi/discretizationStepsPhi)];
+  public float getSin(int phiIndex) {
+    return tabSin[phiIndex];
   }
 }

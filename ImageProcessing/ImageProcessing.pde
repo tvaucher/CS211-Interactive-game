@@ -9,12 +9,26 @@ final float[][] gaussianKernel = {
   {9, 12, 9}};
 final float discretizationStepsPhi = 0.06f;
 final float discretizationStepsR = 2.5f;
-TrigonometricAccelerator trigoVal;
+final int phiDim = (int) (Math.PI / discretizationStepsPhi);
+TrigonometricAccelerator trigo;
 Hough hough;
+
+// Thresholding constants
+int MIN_COLOR = 80, MAX_COLOR = 140;
+int MIN_BRIGHT = 30, MAX_BRIGHT = 170;
+int MIN_SATURATION = 75, MAX_SATURATION = 255;
+int BINARY_THRESHOLD = 35;
+
+// Hough
+int NEIGHBOURHOOD = 10; // size of the region we search for a local maximum
+int MIN_VOTE = 150;     // only search around lines with more that this amount of votes
+// Area
+int MIN_AREA = 70000, MAX_AREA = 350000;
 
 // Main processing methods
 void settings() {
   size(1760, 480); // Resize img and sobel : 640x480, hough transform : 480x480
+  trigo = new TrigonometricAccelerator(phiDim, discretizationStepsR, discretizationStepsPhi);
 }
 
 void setup() {
@@ -22,12 +36,12 @@ void setup() {
   boardImg.resize(640, 480);
   image(boardImg, 0, 0);
   
-  PImage colorFilter = colorFilter(80, 140, boardImg); // Green : [80, 140]
-  PImage brightnessFilter = brightnessFilter(30, 170, colorFilter); //30 lowerbound board4 ||170 upper bound board2
-  PImage saturationFilter = saturationFilter(75, 255, brightnessFilter); // 65 lowerbound board4 || 255 upper bound forall
+  PImage colorFilter = colorFilter(MIN_COLOR, MAX_COLOR, boardImg); // Green : [80, 140]
+  PImage brightnessFilter = brightnessFilter(MIN_BRIGHT, MAX_BRIGHT, colorFilter); //30 lowerbound board4 ||170 upper bound board2
+  PImage saturationFilter = saturationFilter(MIN_SATURATION, MAX_SATURATION, brightnessFilter); // 65 lowerbound board4 || 255 upper bound forall
 
   PImage gaussian2 = convolute(gaussianKernel, saturationFilter);
-  PImage binaryFilter = binaryFilter(35, gaussian2);
+  PImage binaryFilter = binaryFilter(BINARY_THRESHOLD, gaussian2);
 
   PImage sobel = sobel(binaryFilter);
 
