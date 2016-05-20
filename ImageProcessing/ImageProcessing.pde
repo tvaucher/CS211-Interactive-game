@@ -7,7 +7,7 @@ final float[][] gaussianKernel = {
   {9, 12, 9}, 
   {12, 15, 12}, 
   {9, 12, 9}};
-final float discretizationStepsPhi = 0.06f;
+final float discretizationStepsPhi = 0.02f;
 final float discretizationStepsR = 2.5f;
 final int phiDim = (int) (Math.PI / discretizationStepsPhi);
 TrigonometricAccelerator trigo;
@@ -20,7 +20,7 @@ int MIN_SATURATION = 75, MAX_SATURATION = 255;
 int BINARY_THRESHOLD = 35;
 
 // Hough
-int NEIGHBOURHOOD = 10; // size of the region we search for a local maximum
+int NEIGHBOURHOOD = 20; // size of the region we search for a local maximum
 int MIN_VOTE = 150;     // only search around lines with more that this amount of votes
 // Area
 int MIN_AREA = 70000, MAX_AREA = 350000;

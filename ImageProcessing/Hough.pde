@@ -85,7 +85,6 @@ public class Hough {
       float phi = accPhi * discretizationStepsPhi;
 
       PVector vect = new PVector(r, phi);
-      //PVector vect = new PVector(r, accPhi);
       pairs.add(vect);
     }
 
