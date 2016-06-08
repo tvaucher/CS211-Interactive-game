@@ -357,7 +357,9 @@ class QuadGraph {
     c.add(intersection(l3, l4));
     c.add(intersection(l4, l1));
     PVector c1 = c.get(0), c2 = c.get(1), c3 = c.get(2), c4 = c.get(3);
-
+    
+    
+    
     fill(255, 128, 0, 80);
     quad(c1.x, c1.y, c2.x, c2.y, c3.x, c3.y, c4.x, c4.y);
 
@@ -365,6 +367,11 @@ class QuadGraph {
     stroke(204, 102, 0);
     for (PVector line : l) displayLine(line, w);
     for (PVector corner : c) displayCorner(corner);
+    
+    TwoDThreeD t = new TwoDThreeD(width,height);
+    List<PVector> sorted = sortCorners(c);
+    PVector p = t.get3DRotations(sorted);
+    System.out.println("rx:"+degrees(p.x)+" , ry:"+degrees(p.y)+" , rz:"+degrees(p.z));
   }
 
   private void displayLine(PVector l, int w) {
@@ -405,20 +412,5 @@ class QuadGraph {
 
   private void displayCorner(PVector c) {
     ellipse(c.x, c.y, 10, 10);
-  }
-}
-class CWComparator implements Comparator<PVector> {
-
-  PVector center;
-
-  public CWComparator(PVector center) {
-    this.center = center;
-  }
-
-  @Override
-    public int compare(PVector b, PVector d) {
-    if (Math.atan2(b.y-center.y, b.x-center.x)<Math.atan2(d.y-center.y, d.x-center.x))      
-      return -1; 
-    else return 1;
   }
 }

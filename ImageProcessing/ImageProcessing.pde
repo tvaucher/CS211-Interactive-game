@@ -1,6 +1,6 @@
 // To the corrector's intention :
 // So you can easily change the filename
-final String FILENAME = "board1.jpg";
+final String FILENAME = "board4.jpg";
 
 // Main constants
 final float[][] gaussianKernel = {
@@ -12,6 +12,13 @@ final float discretizationStepsR = 2.5f;
 final int phiDim = (int) (Math.PI / discretizationStepsPhi);
 TrigonometricAccelerator trigo;
 Hough hough;
+
+//Utilities for using the webcam
+import processing.video.*;
+Capture cam;
+PImage img;
+
+
 
 // Thresholding constants
 int MIN_COLOR = 80, MAX_COLOR = 140;
@@ -27,21 +34,52 @@ int MIN_AREA = 70000, MAX_AREA = 350000;
 
 // Main processing methods
 void settings() {
-  size(1760, 480); // Resize img and sobel : 640x480, hough transform : 480x480
+  size(1600, 800); // Resize img and sobel : 640x480, hough transform : 480x480
                    // In order to fit on a 1920x1080 screen
   trigo = new TrigonometricAccelerator(phiDim, discretizationStepsR, discretizationStepsPhi);
 }
 
 void setup() {
-  PImage boardImg = loadImage(FILENAME);
-  boardImg.resize(640, 480);
-  image(boardImg, 0, 0);
   
-  PImage colorFilter = colorFilter(MIN_COLOR, MAX_COLOR, boardImg); // Green : [80, 140]
-  PImage brightnessFilter = brightnessFilter(MIN_BRIGHT, MAX_BRIGHT, colorFilter); //30 lowerbound board4 ||170 upper bound board2
-  PImage saturationFilter = saturationFilter(MIN_SATURATION, MAX_SATURATION, brightnessFilter); // 65 lowerbound board4 || 255 upper bound forall
+//------BEGIN WEBCAM PART 1-------------
+  /*String[] cameras = Capture.list();
+  if (cameras.length == 0) {
+    println("There are no cameras available for capture.");
+    exit();
+  } else {
+      println("Available cameras:");
+      for (int i = 0; i < cameras.length; i++) {
+        println(cameras[i]);
+      }
+    cam = new Capture(this, cameras[0]);
+    cam.start();
+  }*/
+//------END WEBCAM PART 1-------------
+  
+  //-----BEGIN static part-------
+  PImage boardImg = loadImage(FILENAME);
+  boardImg.resize(640,480);
+  drawAugmentedImage(boardImg);
+  noLoop();
+  //------END static part--------
+}
 
-  PImage gaussian2 = convolute(gaussianKernel, saturationFilter);
+//------BEGIN WEBCAM PART 2-------------
+/*void draw() {
+  if (cam.available() == true) {
+    cam.read();
+  }
+   img = cam.get();
+   drawAugmentedImage(img);
+}*/
+//------END WEBCAM PART 2-------------
+
+void drawAugmentedImage(PImage boardImg){
+  image(boardImg, 0, 0);
+  PImage filtered = brightnessColorAndSaturationFilter(MIN_BRIGHT, MAX_BRIGHT, MIN_SATURATION, MAX_SATURATION, MIN_COLOR, MAX_COLOR, boardImg);
+ 
+  PImage gaussian2 = convolute(gaussianKernel, filtered);
+  
   PImage binaryFilter = binaryFilter(BINARY_THRESHOLD, gaussian2);
 
   PImage sobel = sobel(binaryFilter);
@@ -52,8 +90,4 @@ void setup() {
   
   graph.displayBestQuad(hough.lines, boardImg.width);
   
-  PImage houghImage = hough.getHoughImage();
-  image(houghImage, 640, 0);
-  image(sobel, 1120, 0);
-  noLoop();
 }
