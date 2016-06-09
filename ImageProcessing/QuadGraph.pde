@@ -2,8 +2,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 class QuadGraph {
+  
   List<int[]> cycles = new ArrayList<int[]>();
   int[][] graph;
 
@@ -49,6 +51,7 @@ class QuadGraph {
     return (0 <= inter.x && 0 <= inter.y && width >= inter.x && height >= inter.y);
   }
 
+
   List<int[]> findCycles() {
 
     cycles.clear();
@@ -57,13 +60,13 @@ class QuadGraph {
         findNewCycles(new int[] {graph[i][j]});
       }
     }
-    for (int[] cy : cycles) {
+    /*for (int[] cy : cycles) {
       String s = "" + cy[0];
       for (int i = 1; i < cy.length; i++) {
         s += "," + cy[i];
       }
       //System.out.println(s);
-    }
+    }*/
     return cycles;
   }
 
@@ -91,11 +94,14 @@ class QuadGraph {
             int[] p = normalize(path);
             int[] inv = invert(p);
             if (isNew(p) && isNew(inv)) {
+              
               cycles.add(p);
             }
           }
         }
   }
+  
+
 
   //  check of both arrays have same lengths and contents
   Boolean equals(int[] a, int[] b) {
@@ -147,7 +153,8 @@ class QuadGraph {
   Boolean isNew(int[] path)
   {
     Boolean ret = true;
-
+  
+    
     for (int[] p : cycles)
     {
       if (equals(p, path))
@@ -328,19 +335,22 @@ class QuadGraph {
       float area = area(c1, c2, c3, c4);
       boolean valid = validArea(area, MIN_AREA, MAX_AREA);
       boolean flat = nonFlatQuad(c1, c2, c3, c4);
+      
       if (convex && valid && flat && area > maxArea) {
         maxArea = area;
         bestQuad = quad;
       }
-    }
     
+    }
+
     return bestQuad;
   }
-
-
-  void displayBestQuad(List<PVector> lines, int w) {
+  
+ 
+//----------CHANGE TO PVECTOR---------------
+  PVector displayBestQuad(List<PVector> lines, int w) {
     int[] quad = getBestQuad(lines);
-    if (quad == null) return; //Don't want to draw best quad if there isn't any => try to fit thresholding
+    if (quad == null) return null; //Don't want to draw best quad if there isn't any => try to fit thresholding
     ArrayList<PVector> l = new ArrayList<PVector>(4);
     for (int i = 0; i < 4; ++i) {
       l.add(lines.get(quad[i]));
@@ -351,11 +361,14 @@ class QuadGraph {
     PVector l3 = l.get(2);
     PVector l4 = l.get(3);
 
-    List<PVector> c = new ArrayList<PVector>(4);
-    c.add(intersection(l1, l2));
-    c.add(intersection(l2, l3));
-    c.add(intersection(l3, l4));
-    c.add(intersection(l4, l1));
+    List<PVector> cUnsorted = new ArrayList<PVector>(4);
+    cUnsorted.add(intersection(l1, l2));
+    cUnsorted.add(intersection(l2, l3));
+    cUnsorted.add(intersection(l3, l4));
+    cUnsorted.add(intersection(l4, l1));
+    
+    List<PVector> c = sortCorners(cUnsorted);
+    
     PVector c1 = c.get(0), c2 = c.get(1), c3 = c.get(2), c4 = c.get(3);
     
     
@@ -369,10 +382,15 @@ class QuadGraph {
     for (PVector corner : c) displayCorner(corner);
     
     TwoDThreeD t = new TwoDThreeD(width,height);
-    List<PVector> sorted = sortCorners(c);
-    PVector p = t.get3DRotations(sorted);
+    PVector p = t.get3DRotations(c);
+    return p;
+    //-----------FOR TEST-------------
+    /*TwoDThreeD t = new TwoDThreeD(width,height);
+    PVector p = t.get3DRotations(sorted1);
     System.out.println("rx:"+degrees(p.x)+" , ry:"+degrees(p.y)+" , rz:"+degrees(p.z));
-  }
+    */
+    //-----------END TEST---------------
+}
 
   private void displayLine(PVector l, int w) {
     // Cartesian equation of a line: y = ax + b

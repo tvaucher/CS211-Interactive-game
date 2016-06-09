@@ -1,4 +1,4 @@
-class TrigonometricAccelerator {
+public class TrigonometricAccelerator {
   float[] tabSin;
   float[] tabCos;
   public TrigonometricAccelerator(int phiDim, float discretizationStepsR, float discretizationStepsPhi) {
