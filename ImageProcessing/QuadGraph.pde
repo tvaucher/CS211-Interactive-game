@@ -244,7 +244,7 @@ class QuadGraph {
     float i4=c4.cross(c1).z;
 
     float area = Math.abs(0.5f * (i1 + i2 + i3 + i4));
-    //System.out.println(area);
+    System.out.println(area);
     return area;
   }
   /** Compute the (cosine) of the four angles of the quad, and check they are all large enough
@@ -272,33 +272,6 @@ class QuadGraph {
       return false;
     }
   }
-
-
-  List<PVector> sortCorners(List<PVector> quad) {
-
-    // 1 - Sort corners so that they are ordered clockwise
-    PVector a = quad.get(0);
-    PVector b = quad.get(2);
-
-    PVector center = new PVector((a.x+b.x)/2, (a.y+b.y)/2);
-
-    Collections.sort(quad, new CWComparator(center));
-
-    // 2 - Sort by upper left most corner
-    PVector origin = new PVector(0, 0);
-    float distToOrigin = 1000;
-
-    for (PVector p : quad) {
-      if (p.dist(origin) < distToOrigin) distToOrigin = p.dist(origin);
-    }
-
-    while (quad.get(0).dist(origin) != distToOrigin)
-      Collections.rotate(quad, 1);
-
-
-    return quad;
-  }
-
 
   int[] getBestQuad(List<PVector> lines) {
     int[] bestQuad = null;
@@ -328,7 +301,7 @@ class QuadGraph {
         bestQuad = quad;
       }
     }
-    
+
     return bestQuad;
   }
 
@@ -360,6 +333,29 @@ class QuadGraph {
     stroke(204, 102, 0);
     for (PVector line : l) displayLine(line, w);
     for (PVector corner : c) displayCorner(corner);
+  }
+
+  void displayRotation(List<PVector> lines, TwoDThreeD convert) {
+    int[] quad = getBestQuad(lines);
+    if (quad == null) return; //Don't want to draw best quad if there isn't any => try to fit thresholding
+    ArrayList<PVector> l = new ArrayList<PVector>(4);
+    for (int i = 0; i < 4; ++i) {
+      l.add(lines.get(quad[i]));
+    }
+
+    PVector l1 = l.get(0);
+    PVector l2 = l.get(1);
+    PVector l3 = l.get(2);
+    PVector l4 = l.get(3);
+
+    List<PVector> c = new ArrayList<PVector>(4);
+    c.add(intersection(l1, l2));
+    c.add(intersection(l2, l3));
+    c.add(intersection(l3, l4));
+    c.add(intersection(l4, l1));
+    sortCorners(c);
+    
+    println(convert.get3DRotations(c).mult(180/PI));
   }
 
   private void displayLine(PVector l, int w) {
@@ -400,20 +396,5 @@ class QuadGraph {
 
   private void displayCorner(PVector c) {
     ellipse(c.x, c.y, 10, 10);
-  }
-}
-class CWComparator implements Comparator<PVector> {
-
-  PVector center;
-
-  public CWComparator(PVector center) {
-    this.center = center;
-  }
-
-  @Override
-    public int compare(PVector b, PVector d) {
-    if (Math.atan2(b.y-center.y, b.x-center.x)<Math.atan2(d.y-center.y, d.x-center.x))      
-      return -1; 
-    else return 1;
   }
 }
