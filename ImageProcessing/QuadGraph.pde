@@ -222,7 +222,7 @@ class QuadGraph {
       || (i1<0 && i2<0 && i3<0 && i4<0))
       return true;
     else 
-    System.out.println("Eliminating non-convex quad");
+    //System.out.println("Eliminating non-convex quad " + c1);
     return false;
   }
 
@@ -232,7 +232,7 @@ class QuadGraph {
 
     boolean valid = (area < max_area && area > min_area);
 
-    if (!valid) System.out.println("Area out of range");
+    //if (!valid) System.out.println("Area out of range" + area);
 
     return valid;
   }
@@ -244,7 +244,6 @@ class QuadGraph {
     float i4=c4.cross(c1).z;
 
     float area = Math.abs(0.5f * (i1 + i2 + i3 + i4));
-    System.out.println(area);
     return area;
   }
   /** Compute the (cosine) of the four angles of the quad, and check they are all large enough
@@ -253,7 +252,7 @@ class QuadGraph {
   boolean nonFlatQuad(PVector c1, PVector c2, PVector c3, PVector c4) {
 
     // cos(70deg) ~= 0.3
-    float min_cos = 0.5f;
+    float min_cos = 0.9f;
 
     PVector v21= PVector.sub(c1, c2);
     PVector v32= PVector.sub(c2, c3);
@@ -268,7 +267,7 @@ class QuadGraph {
     if (cos1 < min_cos && cos2 < min_cos && cos3 < min_cos && cos4 < min_cos)
       return true;
     else {
-      System.out.println("Flat quad");
+      // System.out.println("Flat quad " + cos1 + " " + cos2 + " " + cos3 + " " + cos4);
       return false;
     }
   }
@@ -354,8 +353,6 @@ class QuadGraph {
     c.add(intersection(l3, l4));
     c.add(intersection(l4, l1));
     sortCorners(c);
-    
-    println(convert.get3DRotations(c).mult(180/PI));
   }
 
   private void displayLine(PVector l, int w) {
