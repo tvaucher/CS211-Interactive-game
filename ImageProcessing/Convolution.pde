@@ -40,7 +40,6 @@ PImage sobel(PImage image) {
   }
   
   float threshold = max * 0.09f; // 0.3^2 30% of the max
-  println(threshold + " " + max + " " + 255*255*2);
   for (int y = 1; y < image.height - 1; y++) { // Skip top and bottom edges
     for (int x = 1; x < image.width - 1; x++) { // Skip left and right
       if (buffer[y * image.width + x] >= threshold) { 

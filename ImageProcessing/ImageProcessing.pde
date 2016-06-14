@@ -23,7 +23,7 @@ int BINARY_THRESHOLD = 35;
 int NEIGHBOURHOOD = 20; // size of the region we search for a local maximum
 int MIN_VOTE = 150;     // only search around lines with more that this amount of votes
 // Area
-int MIN_AREA = 70000, MAX_AREA = 350000;
+int MIN_AREA = 35000, MAX_AREA = 175000;
 
 // Main processing methods
 void settings() {
