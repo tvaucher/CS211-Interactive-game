@@ -353,6 +353,9 @@ class QuadGraph {
     c.add(intersection(l3, l4));
     c.add(intersection(l4, l1));
     sortCorners(c);
+    
+    PVector out = convert.get3DRotations(c);
+    println(PVector.mult(out, 180/PI));
   }
 
   private void displayLine(PVector l, int w) {

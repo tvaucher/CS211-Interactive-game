@@ -2,7 +2,7 @@
 // So you can easily change the filename
 import processing.video.*;
 final String FILENAME = "FullPathToTheVideo";
-Movie cam;
+Capture cam;
 
 // Main constants
 final float[][] gaussianKernel = {
@@ -36,32 +36,41 @@ void settings() {
 }
 
 void setup() {
-  cam = new Movie(this, FILENAME);
-  cam.loop();
+  String[] cameras = Capture.list();
+  if (cameras.length == 0) {
+    println("There are no cameras available for capture.");
+    exit();
+  } else {
+    println("Available cameras:");
+    for (int i = 0; i < cameras.length; i++) {
+      println(cameras[i]);
+    }
+    cam = new Capture(this, cameras[0]);
+    cam.start();
+  }
 }
-  
+
 void draw() {
-  PImage boardImg = cam;
-  image(boardImg, 0, 0);
-
-  PImage colorFilter = colorFilter(MIN_COLOR, MAX_COLOR, boardImg); // Green : [80, 140]
-  PImage brightnessFilter = brightnessFilter(MIN_BRIGHT, MAX_BRIGHT, colorFilter); //30 lowerbound board4 ||170 upper bound board2
-  PImage saturationFilter = saturationFilter(MIN_SATURATION, MAX_SATURATION, brightnessFilter); // 65 lowerbound board4 || 255 upper bound forall
-
-  PImage gaussian2 = convolute(gaussianKernel, saturationFilter);
-  PImage binaryFilter = binaryFilter(BINARY_THRESHOLD, gaussian2);
-
-  PImage sobel = sobel(binaryFilter);
-
-  hough = new Hough(sobel, 6);
-  QuadGraph graph = new QuadGraph(hough.lines, boardImg.width, boardImg.height);
-  graph.findCycles();
+  if (cam.available() == true) {
+    cam.read();
+    println("read");
+  }
+    PImage boardImg = cam.get();
+    image(boardImg, 0, 0);
   
-  graph.displayBestQuad(hough.lines, boardImg.width);
-  graph.displayRotation(hough.lines, converter);
-}
-
-// Called every time a new frame is available to read
-void movieEvent(Movie m) {
-  m.read();
+    PImage colorFilter = colorFilter(MIN_COLOR, MAX_COLOR, boardImg); // Green : [80, 140]
+    PImage brightnessFilter = brightnessFilter(MIN_BRIGHT, MAX_BRIGHT, colorFilter); //30 lowerbound board4 ||170 upper bound board2
+    PImage saturationFilter = saturationFilter(MIN_SATURATION, MAX_SATURATION, brightnessFilter); // 65 lowerbound board4 || 255 upper bound forall
+  
+    PImage gaussian2 = convolute(gaussianKernel, saturationFilter);
+    PImage binaryFilter = binaryFilter(BINARY_THRESHOLD, gaussian2);
+  
+    PImage sobel = sobel(binaryFilter);
+  
+    hough = new Hough(sobel, 6);
+    QuadGraph graph = new QuadGraph(hough.lines, boardImg.width, boardImg.height);
+    graph.findCycles();
+  
+    graph.displayBestQuad(hough.lines, boardImg.width);
+    graph.displayRotation(hough.lines, converter);
 }
