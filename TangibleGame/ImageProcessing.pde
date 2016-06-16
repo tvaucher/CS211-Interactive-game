@@ -25,8 +25,7 @@ public class ImageProcessing {
   public ImageProcessing() {
   }
   
-  public PVector rotation(PImage img) {
-    PImage boardImg = img.copy();
+  public PVector rotation(PImage boardImg) {
     PImage colorFilter = colorFilter(MIN_COLOR, MAX_COLOR, boardImg); // Green : [80, 140]
     PImage brightnessFilter = brightnessFilter(MIN_BRIGHT, MAX_BRIGHT, colorFilter); //30 lowerbound board4 ||170 upper bound board2
     PImage saturationFilter = saturationFilter(MIN_SATURATION, MAX_SATURATION, brightnessFilter); // 65 lowerbound board4 || 255 upper bound forall
@@ -43,8 +42,7 @@ public class ImageProcessing {
     return graph.getRotation(hough.lines, converter);
   }
   
-  public void displayCam(PImage image) {
-    PImage img = image.copy();
+  public void displayCam(PImage img) {
     if (img.width != MOVIE_WIDTH && img.height != MOVIE_HEIGHT) {
       return;
     }

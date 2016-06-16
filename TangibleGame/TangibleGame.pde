@@ -91,7 +91,7 @@ void draw() {
     cam.read();
   }*/
   background(255, 255, 255);
-  imgproc.displayCam(cam);
+  imgproc.displayCam(cam.get());
   displayBackgroundDataVis();
   topView.display(savedCylinder, ball);
   scoreView.display(mover, scoreManager);
@@ -177,7 +177,7 @@ void movieEvent(Movie m) {
 float rz = 0, rx = 0;
 final float MIN_ANGLE = -PI/3, MAX_ANGLE = PI/3;
 void setRotation() {
-  PVector rotation = imgproc.rotation(cam);
+  PVector rotation = imgproc.rotation(cam.get());
   if (rotation != null) {
     rx = rotation.x; // According to week12 we should use r_x and r_y to tilt (and not r_z)
     rz = rotation.y;
