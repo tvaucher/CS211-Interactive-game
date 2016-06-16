@@ -21,6 +21,12 @@ public void drawAxis() {
   text("Z",1,1,200);
 }
 
+public void drawPause() {
+  textSize(36);
+  fill(255);
+  text("PAUSE", 22, 70, 1);
+}
+
 public void displayBackgroundDataVis() {
   backgroundDataVis.beginDraw();
   backgroundDataVis.background(255,240,190);

@@ -1,7 +1,7 @@
 import processing.video.*;
 
 // To the corrector's intention
-final String FILENAME = "PathToTestvideo.mp4";
+final String FILENAME = "FullPathToTestVideo.mp4";
 
 // Screen constants
 final int screenWidth = 1000;
@@ -92,6 +92,7 @@ void draw() {
   }*/
   background(255, 255, 255);
   imgproc.displayCam(cam.get());
+  if (state == GameState.SHIFTMODE) drawPause();
   displayBackgroundDataVis();
   topView.display(savedCylinder, ball);
   scoreView.display(mover, scoreManager);
@@ -139,6 +140,7 @@ void keyPressed() {
   if (key == CODED) {
     if (keyCode == SHIFT) {
       state = GameState.SHIFTMODE;
+      cam.pause();
     }
   }
 }
@@ -150,6 +152,7 @@ void keyReleased() {
   if (key == CODED) {
     if (keyCode == SHIFT) {
       state = GameState.STANDARD;
+      cam.play();
     }
   }
 }
