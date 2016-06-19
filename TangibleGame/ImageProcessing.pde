@@ -4,7 +4,7 @@ final float[][] gaussianKernel = {
   {12, 15, 12}, 
   {9, 12, 9}};
 final float discretizationStepsPhi = 0.02f;
-final float discretizationStepsR = 2.5f;
+final float discretizationStepsR = 1f;
 final int phiDim = (int) (Math.PI / discretizationStepsPhi);
 TrigonometricAccelerator trigo = new TrigonometricAccelerator(phiDim, discretizationStepsR, discretizationStepsPhi);
 TwoDThreeD converter = new TwoDThreeD(MOVIE_WIDTH, MOVIE_HEIGHT);
@@ -16,8 +16,8 @@ int MIN_SATURATION = 75, MAX_SATURATION = 255;
 int BINARY_THRESHOLD = 35;
 
 // Hough
-int NEIGHBOURHOOD = 20; // size of the region we search for a local maximum
-int MIN_VOTE = 140;     // only search around lines with more that this amount of votes
+int NEIGHBOURHOOD = 25; // size of the region we search for a local maximum
+int MIN_VOTE = 75;     // only search around lines with more that this amount of votes
 // Area
 int MIN_AREA = 15000, MAX_AREA = 150000;
 
