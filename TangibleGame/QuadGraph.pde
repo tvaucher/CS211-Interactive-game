@@ -295,6 +295,7 @@ class QuadGraph {
       if (convex && valid && flat && area > maxArea) {
         maxArea = area;
         bestQuad = quad;
+        currentCorners = c;
       }
     }
 
@@ -304,23 +305,7 @@ class QuadGraph {
   PVector getRotation(List<PVector> lines, TwoDThreeD convert) {
     int[] quad = getBestQuad(lines);
     if (quad == null) return null; //Don't want to draw best quad if there isn't any => try to fit thresholding
-    ArrayList<PVector> l = new ArrayList<PVector>(4);
-    for (int i = 0; i < 4; ++i) {
-      l.add(lines.get(quad[i]));
-    }
-
-    PVector l1 = l.get(0);
-    PVector l2 = l.get(1);
-    PVector l3 = l.get(2);
-    PVector l4 = l.get(3);
-
-    List<PVector> c = new ArrayList<PVector>(4);
-    c.add(intersection(l1, l2));
-    c.add(intersection(l2, l3));
-    c.add(intersection(l3, l4));
-    c.add(intersection(l4, l1));
-    sortCorners(c);
     
-    return convert.get3DRotations(c);
+    return convert.get3DRotations(currentCorners);
   }
 }

@@ -20,11 +20,13 @@ int NEIGHBOURHOOD = 25; // size of the region we search for a local maximum
 int MIN_VOTE = 75;     // only search around lines with more that this amount of votes
 // Area
 int MIN_AREA = 15000, MAX_AREA = 150000;
+List<PVector> currentCorners = new ArrayList<PVector>();
 
 public class ImageProcessing {
+  PImage sobel;
   public ImageProcessing() {
   }
-  
+
   public PVector rotation(PImage boardImg) {
     PImage colorFilter = colorFilter(MIN_COLOR, MAX_COLOR, boardImg); // Green : [80, 140]
     PImage brightnessFilter = brightnessFilter(MIN_BRIGHT, MAX_BRIGHT, colorFilter); //30 lowerbound board4 ||170 upper bound board2
@@ -33,20 +35,38 @@ public class ImageProcessing {
     PImage gaussian2 = convolute(gaussianKernel, saturationFilter);
     PImage binaryFilter = binaryFilter(BINARY_THRESHOLD, gaussian2);
 
-    PImage sobel = sobel(binaryFilter);
+    sobel = sobel(binaryFilter);
 
     Hough hough = new Hough(sobel, 6);
     QuadGraph graph = new QuadGraph(hough.lines, boardImg.width, boardImg.height);
     graph.findCycles();
-    
+
     return graph.getRotation(hough.lines, converter);
   }
-  
+
   public void displayCam(PImage img) {
     if (img.width != MOVIE_WIDTH && img.height != MOVIE_HEIGHT) {
       return;
     }
     img.resize(img.width/4, img.height/4);
     image(img, 0, 0);
+    if (sobel != null) {
+      fill(0);
+      noStroke();
+      rect(img.width, 0, img.width, img.height);
+      PImage cpy = sobel.copy();
+      cpy.resize(img.width, img.height);
+      image(cpy, img.width, 0);
+      drawCorners(img.width);
+    }
+  }
+
+  private void drawCorners(float dx) {
+    if (currentCorners.size() != 4) return;
+    fill(255, 128, 0);
+    stroke(204, 102, 0);
+    for (PVector c : currentCorners) {
+      ellipse(dx + c.x/4.f, c.y/4.f, 10, 10);
+    }
   }
 }
